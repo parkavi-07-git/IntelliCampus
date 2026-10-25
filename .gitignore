@@ -7,3 +7,12 @@
 **/dist/
 .idea/
 .vscode/
+
+# Local temporary and diagnostic files
+GenerateHash.class
+GenerateHash.java
+backend/backend-log.txt
+backend/classpath.txt
+
+# Local backups
+*.backup

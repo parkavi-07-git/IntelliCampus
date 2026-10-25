@@ -1,4 +1,4 @@
-﻿import { useState } from "react";
+import { useState } from "react";
 import "./AddCourse.css";
 
 function AddCourse({ onCourseAdded, onCancel }) {
@@ -55,6 +55,7 @@ function AddCourse({ onCourseAdded, onCancel }) {
           headers: {
             "Content-Type": "application/json"
           },
+          credentials: "include",
           body: JSON.stringify({
             name: form.name,
             code: form.code,
@@ -71,7 +72,10 @@ function AddCourse({ onCourseAdded, onCancel }) {
       );
 
       if (!response.ok) {
-        throw new Error("Failed to add course");
+        const errorText = await response.text();
+        throw new Error(
+          `HTTP ${response.status}: ${errorText || response.statusText}`
+        );
       }
 
       const newCourse = await response.json();
@@ -97,8 +101,8 @@ function AddCourse({ onCourseAdded, onCancel }) {
 
     } catch (error) {
 
-      console.error(error);
-      setMessage("Could not add course. Please check the backend.");
+      console.error("Add course error:", error);
+      setMessage(error.message || "Could not add course.");
 
     } finally {
 

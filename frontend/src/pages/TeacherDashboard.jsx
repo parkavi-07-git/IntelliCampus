@@ -1,7 +1,8 @@
-﻿import { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./TeacherDashboard.css";
 import AttendancePortal from "./AttendancePortal";
 import TeacherTimetable from "./TeacherTimetable";
+import AddCourse from "./AddCourse";
 
 const API = "http://localhost:8080";
 
@@ -14,6 +15,7 @@ const emptyStudentForm = {
 
 function TeacherDashboard({ user, onLogout }) {
   const [activePage, setActivePage] = useState("Dashboard");
+  const [showAddCourse, setShowAddCourse] = useState(false);
   const [students, setStudents] = useState([]);
   const [courses, setCourses] = useState([]);
   const [attendance, setAttendance] = useState([]);
@@ -516,10 +518,28 @@ function TeacherDashboard({ user, onLogout }) {
       <div className="teacher-content-card">
         <div className="teacher-section-title">
           <div>
-            <h2>Student Course Assignments</h2>
-            <p>Assign or remove a course for an individual student.</p>
+            <h2>Course Management</h2>
+            <p>Add subjects and manage student course assignments.</p>
           </div>
+          <button
+            type="button"
+            onClick={() => setShowAddCourse(true)}
+          >
+            + Add Subject
+          </button>
         </div>
+
+        {showAddCourse && (
+          <AddCourse
+            onCancel={() => setShowAddCourse(false)}
+            onCourseAdded={async () => {
+              setShowAddCourse(false);
+              setMessage("Subject added successfully!");
+              setError("");
+              await loadCourses();
+            }}
+          />
+        )}
 
         {error && <p role="alert" style={{ color: "#b91c1c" }}>{error}</p>}
         {message && <p role="status" style={{ color: "#15803d" }}>{message}</p>}
